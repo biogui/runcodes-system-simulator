@@ -98,57 +98,51 @@ def is_correct(out_file, my_file):
     errors = dict()
     over_lines = list()
     while True:
-        try:
-            expected_line = expected_out.readline().decode()
-            my_line = my_out.readline().decode()
-            line_posix += 1
+        expected_line = expected_out.readline().decode()
+        my_line = my_out.readline().decode()
+        line_posix += 1
 
-            ex_len = len(expected_line)
-            my_len = len(my_line)
+        ex_len = len(expected_line)
+        my_len = len(my_line)
 
-            if ex_len == 0 and my_len == 0:
-                break
+        if ex_len == 0 and my_len == 0: break
 
-            if ex_len == 0:
-                while my_line:
-                    over_lines.append(my_line)
-                    my_line = my_out.readline().decode()
-                over_lines.insert(0, "surplus")
+        if ex_len == 0:
+            while my_line:
+                over_lines.append(my_line)
+                my_line = my_out.readline().decode()
+            over_lines.insert(0, "surplus")
 
-                break
+            break
 
-            if my_len == 0:
-                over_lines = list()
-                while expected_line:
-                    over_lines.append(expected_line)
-                    expected_line = expected_out.readline().decode()
-                over_lines.insert(0, "missing")
+        if my_len == 0:
+            while expected_line:
+                over_lines.append(expected_line)
+                expected_line = expected_out.readline().decode()
+            over_lines.insert(0, "missing")
 
-                break
+            break
 
-            if expected_line != my_line:
-                pos_fails = list()
+        if expected_line != my_line:
+            pos_fails = list()
 
-                # Recalculate lengths
-                if IGNORE_MODE:
-                    ex_len = len_to_ignore_mode(expected_line)
-                    my_len = len_to_ignore_mode(my_line)
+            # Recalculate lengths
+            if IGNORE_MODE:
+                ex_len = len_to_ignore_mode(expected_line)
+                my_len = len_to_ignore_mode(my_line)
 
-                min_len = min(my_len, ex_len)
-                max_len = max(my_len, ex_len)
+            min_len = min(my_len, ex_len)
+            max_len = max(my_len, ex_len)
 
-                for i in range(min_len):
-                    if expected_line[i] != my_line[i]:
-                        pos_fails.append(i)
-
-                for i in range(min_len, max_len):
+            for i in range(min_len):
+                if expected_line[i] != my_line[i]:
                     pos_fails.append(i)
 
-                if pos_fails:
-                    errors[line_posix] = (expected_line, my_line, pos_fails)
+            for i in range(min_len, max_len):
+                pos_fails.append(i)
 
-        except UnicodeDecodeError:
-            pass
+            if pos_fails:
+                errors[line_posix] = (expected_line, my_line, pos_fails)
 
     expected_out.close()
     my_out.close()
