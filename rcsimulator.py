@@ -333,7 +333,7 @@ if len(all_errors): print_errors(all_errors)
 # Valgrind memory coference ########################################################################
 print_mem_check = input("\nWould you like to test your program with valgrind?(y/n) ").lower()
 
-while print_mem_check != "y" and print_mem_check != "yes" and print_mem_check != "n" and print_mem_check != "no":
+while not print_mem_check[0] in ["y", "n"]:
 	print_mem_check = input("Invalid option, try again... ").lower()
 
 print_mem_check = True if print_mem_check[0] == "y" else False
